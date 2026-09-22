@@ -12,6 +12,8 @@ var speaker_label: Label
 var dialogue_text: Label
 var choices_box: VBoxContainer
 var room_buttons: HBoxContainer
+var natasha_texture: Texture2D
+var room_texture: Texture2D
 
 var current_room := "Living Room"
 var rooms := ["Bedroom", "Living Room", "Kitchen", "Bathroom", "Hallway", "Yard"]
@@ -26,12 +28,20 @@ var room_names := {
 
 func _ready() -> void:
  state.current_room = current_room
+ natasha_texture = load("res://assets/characters/natasha.png")
+ room_texture = load("res://assets/backgrounds/living_room.jpg")
  build_ui()
  show_room(current_room)
  queue_redraw()
 
 func _draw() -> void:
  var size := get_viewport_rect().size
+ if current_room == "Living Room" and room_texture:
+  draw_texture_rect(room_texture, Rect2(0,0,size.x,size.y), false)
+  if natasha_texture:
+   var target := Rect2(size.x * 0.58, size.y * 0.14, size.x * 0.27, size.y * 0.68)
+   draw_texture_rect(natasha_texture, target, false)
+  return
  var w := size.x
  var h := size.y
  draw_rect(Rect2(0, 0, w, h), Color("#11141b"))
