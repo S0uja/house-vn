@@ -1,14 +1,16 @@
 {
  "intro":[
-  {"speaker":"Narrator","text":"Утро. Дом только начинает просыпаться.","advance":5},
-  {"speaker":"Anna","text":"Ты уже проснулся? Я на кухне.","advance":1}
+  {"speaker":"Наташа","text":"Доброе утро. Я уже в гостиной. Заходи, если хочешь поговорить.","advance":1}
+ ],
+ "living_room_natasha":[
+  {"speaker":"Наташа","text":"Доброе утро. Наконец-то проснулся.","choices":[
+   {"text":"Доброе утро","relationship":{"Anna":1},"next":"friendly"},
+   {"text":"Что делаешь?","next":"what"}
+  ]},
+  {"id":"friendly","speaker":"Наташа","text":"Пока отдыхаю. Потом пойду на кухню.","advance":2},
+  {"id":"what","speaker":"Наташа","text":"Смотрела новости, но телевизор уже надоел.","advance":1}
  ],
  "kitchen":[
-  {"speaker":"Anna","text":"Доброе утро. Поможешь мне с завтраком?","choices":[
-   {"text":"Конечно","relationship":{"Anna":1},"next":"thanks"},
-   {"text":"Позже","next":"later"}
-  ]},
-  {"id":"thanks","speaker":"Anna","text":"Спасибо. Тогда начинаем.","advance":10},
-  {"id":"later","speaker":"Anna","text":"Хорошо, заходи позже.","advance":2}
+  {"speaker":"Наташа","text":"На кухне пока никого нет.","advance":1}
  ]
 }
