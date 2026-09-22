@@ -1,0 +1,14 @@
+{
+ "intro":[
+  {"speaker":"Narrator","text":"Утро. Дом только начинает просыпаться.","advance":5},
+  {"speaker":"Anna","text":"Ты уже проснулся? Я на кухне.","advance":1}
+ ],
+ "kitchen":[
+  {"speaker":"Anna","text":"Доброе утро. Поможешь мне с завтраком?","choices":[
+   {"text":"Конечно","relationship":{"Anna":1},"next":"thanks"},
+   {"text":"Позже","next":"later"}
+  ]},
+  {"id":"thanks","speaker":"Anna","text":"Спасибо. Тогда начинаем.","advance":10},
+  {"id":"later","speaker":"Anna","text":"Хорошо, заходи позже.","advance":2}
+ ]
+}
