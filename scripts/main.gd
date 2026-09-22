@@ -2,135 +2,215 @@ extends Node2D
 
 var state := GameState.new()
 var dialogue := DialogueController.new()
-var root: Control
-var room_title: Label
-var time_label: Label
-var room_description: Label
+
+var ui: Control
+var room_name: Label
+var clock_label: Label
+var message_label: Label
 var dialogue_panel: PanelContainer
 var speaker_label: Label
 var dialogue_text: Label
 var choices_box: VBoxContainer
-var status_label: Label
+var room_buttons: HBoxContainer
 
-var rooms := {"Bedroom":"Спальня","Hallway":"Коридор","Living Room":"Гостиная","Kitchen":"Кухня","Bathroom":"Ванная","Yard":"Двор"}
-var descriptions := {
- "Bedroom":"Твоя комната. Здесь начинается день.",
- "Hallway":"Коридор соединяет комнаты дома.",
- "Living Room":"Гостиная с диваном и телевизором.",
- "Kitchen":"Кухня. Утром здесь часто кто-нибудь находится.",
- "Bathroom":"Небольшая ванная комната.",
- "Yard":"Двор перед домом."
+var current_room := "Living Room"
+var rooms := ["Bedroom", "Living Room", "Kitchen", "Bathroom", "Hallway", "Yard"]
+var room_names := {
+ "Bedroom":"Спальня",
+ "Living Room":"Гостиная",
+ "Kitchen":"Кухня",
+ "Bathroom":"Ванная",
+ "Hallway":"Коридор",
+ "Yard":"Двор"
 }
 
 func _ready() -> void:
+ state.current_room = current_room
  build_ui()
- show_room(state.current_room)
- start_dialogue("intro")
+ show_room(current_room)
+ queue_redraw()
+
+func _draw() -> void:
+ var size := get_viewport_rect().size
+ var w := size.x
+ var h := size.y
+ draw_rect(Rect2(0, 0, w, h), Color("#11141b"))
+
+ if current_room == "Living Room":
+  draw_living_room(w, h)
+ elif current_room == "Kitchen":
+  draw_kitchen(w, h)
+ elif current_room == "Bedroom":
+  draw_bedroom(w, h)
+ else:
+  draw_generic_room(w, h)
+
+func draw_living_room(w: float, h: float) -> void:
+ draw_rect(Rect2(0, 0, w, h), Color("#c8b49b"))
+ draw_rect(Rect2(0, 0, w, h * 0.57), Color("#eee5d7"))
+ draw_rect(Rect2(0, h * 0.57, w, h * 0.43), Color("#8c674e"))
+ for x in range(0, int(w), 70):
+  draw_line(Vector2(x, h * 0.57), Vector2(x + 45, h), Color("#76533f"), 2.0)
+ draw_rect(Rect2(w * 0.12, h * 0.32, w * 0.33, h * 0.27), Color("#725b50"))
+ draw_rect(Rect2(w * 0.14, h * 0.36, w * 0.29, h * 0.17), Color("#a88772"))
+ draw_rect(Rect2(w * 0.63, h * 0.18, w * 0.20, h * 0.25), Color("#4b3e38"))
+ draw_rect(Rect2(w * 0.645, h * 0.20, w * 0.17, h * 0.20), Color("#293743"))
+ draw_rect(Rect2(w * 0.82, h * 0.28, w * 0.08, h * 0.29), Color("#53654c"))
+ draw_circle(Vector2(w * 0.86, h * 0.23), 65, Color("#6f865f"))
+ draw_circle(Vector2(w * 0.82, h * 0.20), 45, Color("#78966b"))
+ draw_character(Vector2(w * 0.54, h * 0.56))
+ draw_string(ThemeDB.fallback_font, Vector2(w * 0.48, h * 0.77), "Наташа", HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color("#3c2a25"))
+
+func draw_kitchen(w: float, h: float) -> void:
+ draw_rect(Rect2(0,0,w,h), Color("#d8d0c5"))
+ draw_rect(Rect2(0,h*0.60,w,h*0.40), Color("#806957"))
+ draw_rect(Rect2(w*0.08,h*0.28,w*0.84,h*0.25), Color("#b6aa9c"))
+ draw_rect(Rect2(w*0.12,h*0.32,w*0.28,h*0.15), Color("#59636a"))
+ draw_rect(Rect2(w*0.48,h*0.32,w*0.35,h*0.15), Color("#ebe4d9"))
+ draw_circle(Vector2(w*0.67,h*0.22), 55, Color("#87976d"))
+ draw_character(Vector2(w*0.55,h*0.57))
+ draw_string(ThemeDB.fallback_font, Vector2(w*0.49,h*0.77), "Наташа", HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color("#3c2a25"))
+
+func draw_bedroom(w: float, h: float) -> void:
+ draw_rect(Rect2(0,0,w,h), Color("#d5c5b8"))
+ draw_rect(Rect2(0,h*0.62,w,h*0.38), Color("#765c4d"))
+ draw_rect(Rect2(w*0.10,h*0.32,w*0.56,h*0.30), Color("#7c6258"))
+ draw_rect(Rect2(w*0.12,h*0.34,w*0.52,h*0.22), Color("#d9d0c8"))
+ draw_rect(Rect2(w*0.74,h*0.28,w*0.10,h*0.31), Color("#806d5f"))
+
+func draw_generic_room(w: float, h: float) -> void:
+ draw_rect(Rect2(0,0,w,h), Color("#d0c5b8"))
+ draw_rect(Rect2(0,h*0.62,w,h*0.38), Color("#806957"))
+
+func draw_character(pos: Vector2) -> void:
+ draw_circle(pos + Vector2(0,-92), 32, Color("#e0b08e"))
+ draw_circle(pos + Vector2(0,-98), 34, Color("#c7a46e"))
+ draw_rect(Rect2(pos.x-25,pos.y-62,50,88), Color("#d98f9c"), true)
+ draw_line(pos + Vector2(-20,20), pos + Vector2(-28,88), Color("#e0b08e"), 13)
+ draw_line(pos + Vector2(20,20), pos + Vector2(28,88), Color("#e0b08e"), 13)
+ draw_line(pos + Vector2(-14,26), pos + Vector2(-8,88), Color("#b87882"), 15)
+ draw_line(pos + Vector2(14,26), pos + Vector2(8,88), Color("#b87882"), 15)
+ draw_line(pos + Vector2(-22,-35), pos + Vector2(-52,22), Color("#e0b08e"), 12)
+ draw_line(pos + Vector2(22,-35), pos + Vector2(52,22), Color("#e0b08e"), 12)
 
 func build_ui() -> void:
- root = Control.new()
- root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
- add_child(root)
- var bg := ColorRect.new()
- bg.color = Color("#151821")
- bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
- root.add_child(bg)
+ ui = Control.new()
+ ui.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+ add_child(ui)
 
  var top := PanelContainer.new()
- top.position = Vector2(24,20)
- top.size = Vector2(1232,58)
- root.add_child(top)
+ top.position = Vector2(24,18)
+ top.size = Vector2(1232,64)
+ ui.add_child(top)
  var row := HBoxContainer.new()
+ row.add_theme_constant_override("separation", 18)
  top.add_child(row)
- room_title = Label.new()
- room_title.add_theme_font_size_override("font_size",24)
- room_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
- row.add_child(room_title)
- time_label = Label.new()
- time_label.add_theme_font_size_override("font_size",20)
- row.add_child(time_label)
 
- var nav := PanelContainer.new()
- nav.position = Vector2(24,100)
- nav.size = Vector2(260,500)
- root.add_child(nav)
- var box := VBoxContainer.new()
- box.add_theme_constant_override("separation",8)
- nav.add_child(box)
- var caption := Label.new()
- caption.text = "КОМНАТЫ"
- caption.add_theme_font_size_override("font_size",16)
- box.add_child(caption)
+ room_name = Label.new()
+ room_name.add_theme_font_size_override("font_size",26)
+ room_name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+ row.add_child(room_name)
+ clock_label = Label.new()
+ clock_label.add_theme_font_size_override("font_size",20)
+ row.add_child(clock_label)
+
+ room_buttons = HBoxContainer.new()
+ room_buttons.position = Vector2(24,610)
+ room_buttons.size = Vector2(1232,54)
+ room_buttons.add_theme_constant_override("separation",8)
+ ui.add_child(room_buttons)
+
  for id in rooms:
   var b := Button.new()
-  b.text = rooms[id]
-  b.custom_minimum_size = Vector2(0,48)
+  b.text = room_names[id]
+  b.custom_minimum_size = Vector2(125,48)
   b.pressed.connect(func(): go_to_room(id))
-  box.add_child(b)
+  room_buttons.add_child(b)
 
- var scene := PanelContainer.new()
- scene.position = Vector2(310,100)
- scene.size = Vector2(946,300)
- root.add_child(scene)
- room_description = Label.new()
- room_description.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
- room_description.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
- room_description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
- room_description.add_theme_font_size_override("font_size",28)
- scene.add_child(room_description)
+ var talk := Button.new()
+ talk.text = "💬 Поговорить с Наташей"
+ talk.position = Vector2(930,500)
+ talk.size = Vector2(300,48)
+ talk.pressed.connect(func(): start_dialogue("living_room_natasha"))
+ ui.add_child(talk)
 
+ var sofa := Button.new()
+ sofa.text = "Диван"
+ sofa.position = Vector2(155,425)
+ sofa.size = Vector2(180,55)
+ sofa.modulate = Color(1,1,1,0.0)
+ sofa.pressed.connect(func(): show_message("Можно присесть и немного отдохнуть."))
+ ui.add_child(sofa)
+
+ var tv := Button.new()
+ tv.text = "Телевизор"
+ tv.position = Vector2(755,250)
+ tv.size = Vector2(170,100)
+ tv.modulate = Color(1,1,1,0.0)
+ tv.pressed.connect(func(): show_message("Телевизор выключен."))
+ ui.add_child(tv)
+
+ var save := Button.new()
+ save.text = "💾"
+ save.tooltip_text = "Сохранить"
+ save.position = Vector2(1115,20)
+ save.size = Vector2(55,55)
+ save.pressed.connect(save_game)
+ ui.add_child(save)
+
+ var load := Button.new()
+ load.text = "↻"
+ load.tooltip_text = "Загрузить"
+ load.position = Vector2(1175,20)
+ load.size = Vector2(55,55)
+ load.pressed.connect(load_game)
+ ui.add_child(load)
+
+ message_label = Label.new()
+ message_label.position = Vector2(40,555)
+ message_label.size = Vector2(800,45)
+ message_label.add_theme_font_size_override("font_size",18)
+ ui.add_child(message_label)
+
+ build_dialogue()
+
+func build_dialogue() -> void:
  dialogue_panel = PanelContainer.new()
- dialogue_panel.position = Vector2(310,420)
- dialogue_panel.size = Vector2(946,220)
- root.add_child(dialogue_panel)
- var db := VBoxContainer.new()
- db.add_theme_constant_override("separation",10)
- dialogue_panel.add_child(db)
+ dialogue_panel.position = Vector2(60,390)
+ dialogue_panel.size = Vector2(1160,190)
+ dialogue_panel.visible = false
+ ui.add_child(dialogue_panel)
+ var box := VBoxContainer.new()
+ box.add_theme_constant_override("separation",8)
+ dialogue_panel.add_child(box)
  speaker_label = Label.new()
  speaker_label.add_theme_font_size_override("font_size",22)
- db.add_child(speaker_label)
+ box.add_child(speaker_label)
  dialogue_text = Label.new()
  dialogue_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
  dialogue_text.add_theme_font_size_override("font_size",20)
  dialogue_text.size_flags_vertical = Control.SIZE_EXPAND_FILL
- db.add_child(dialogue_text)
+ box.add_child(dialogue_text)
  choices_box = VBoxContainer.new()
- db.add_child(choices_box)
-
- var actions := HBoxContainer.new()
- actions.position = Vector2(24,620)
- actions.size = Vector2(260,50)
- root.add_child(actions)
- var save := Button.new()
- save.text = "Сохранить"
- save.pressed.connect(save_game)
- actions.add_child(save)
- var load := Button.new()
- load.text = "Загрузить"
- load.pressed.connect(load_game)
- actions.add_child(load)
- status_label = Label.new()
- status_label.position = Vector2(24,680)
- root.add_child(status_label)
-
-func _unhandled_input(event: InputEvent) -> void:
- if event.is_action_pressed("advance_dialogue"):
-  advance_dialogue()
+ box.add_child(choices_box)
 
 func go_to_room(id: String) -> void:
+ current_room = id
  state.current_room = id
  state.advance_time(5)
  show_room(id)
- if id == "Kitchen":
-  start_dialogue("kitchen")
- else:
-  dialogue.start([])
-  dialogue_panel.visible = false
+ dialogue_panel.visible = false
+ message_label.text = "Вы вошли в: " + room_names[id]
+ queue_redraw()
 
 func show_room(id: String) -> void:
- room_title.text = rooms.get(id,id)
- room_description.text = descriptions.get(id,"")
- time_label.text = state.time_text()
+ room_name.text = room_names.get(id,id)
+ clock_label.text = state.time_text()
+
+func show_message(text: String) -> void:
+ message_label.text = text
+ state.advance_time(1)
+ clock_label.text = state.time_text()
 
 func start_dialogue(id: String) -> void:
  var f := FileAccess.open("res://data/story.json",FileAccess.READ)
@@ -140,6 +220,22 @@ func start_dialogue(id: String) -> void:
  dialogue.start(data.get(id,[]))
  render_dialogue()
 
+func render_dialogue() -> void:
+ dialogue_panel.visible = true
+ for child in choices_box.get_children(): child.queue_free()
+ var line := dialogue.current()
+ if line.is_empty():
+  dialogue_panel.visible = false
+  return
+ speaker_label.text = str(line.get("speaker",""))
+ dialogue_text.text = str(line.get("text",""))
+ for choice in line.get("choices",[]):
+  var b := Button.new()
+  b.text = str(choice.get("text",""))
+  b.custom_minimum_size = Vector2(0,34)
+  b.pressed.connect(func(): choose(choice))
+  choices_box.add_child(b)
+
 func advance_dialogue() -> void:
  if dialogue.finished():
   dialogue_panel.visible = false
@@ -147,25 +243,10 @@ func advance_dialogue() -> void:
  dialogue.next()
  render_dialogue()
 
-func render_dialogue() -> void:
- dialogue_panel.visible = true
- for c in choices_box.get_children(): c.queue_free()
- var line := dialogue.current()
- if line.is_empty():
-  dialogue_panel.visible = false
-  return
- speaker_label.text = str(line.get("speaker",""))
- dialogue_text.text = str(line.get("text",""))
- var minutes := int(line.get("advance",0))
- if minutes > 0:
-  state.advance_time(minutes)
-  time_label.text = state.time_text()
- for choice in line.get("choices",[]):
-  var b := Button.new()
-  b.text = str(choice.get("text",""))
-  b.custom_minimum_size = Vector2(0,38)
-  b.pressed.connect(func(): choose(choice))
-  choices_box.add_child(b)
+func _unhandled_input(event: InputEvent) -> void:
+ if event.is_action_pressed("advance_dialogue"):
+  if dialogue_panel.visible:
+   advance_dialogue()
 
 func choose(choice: Dictionary) -> void:
  for name in choice.get("relationship",{}):
@@ -180,8 +261,10 @@ func choose(choice: Dictionary) -> void:
  advance_dialogue()
 
 func save_game() -> void:
- status_label.text = "Сохранение: " + ("OK" if SaveManager.save_game(state) else "ошибка")
+ message_label.text = "Сохранение: " + ("готово" if SaveManager.save_game(state) else "ошибка")
 
 func load_game() -> void:
- status_label.text = "Загрузка: " + ("OK" if SaveManager.load_game(state) else "нет сохранения")
- show_room(state.current_room)
+ message_label.text = "Загрузка: " + ("готово" if SaveManager.load_game(state) else "нет сохранения")
+ current_room = state.current_room
+ show_room(current_room)
+ queue_redraw()
