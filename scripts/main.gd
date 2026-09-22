@@ -39,7 +39,7 @@ func _draw() -> void:
  if current_room == "Living Room" and room_texture:
   draw_texture_rect(room_texture, Rect2(0,0,size.x,size.y), false)
   if natasha_texture:
-   var target := Rect2(size.x * 0.58, size.y * 0.14, size.x * 0.27, size.y * 0.68)
+   var target := Rect2(size.x * 0.52, size.y * 0.05, size.x * 0.34, size.y * 0.88)
    draw_texture_rect(natasha_texture, target, false)
   return
  var w := size.x
@@ -68,8 +68,8 @@ func draw_living_room(w: float, h: float) -> void:
  draw_rect(Rect2(w * 0.82, h * 0.28, w * 0.08, h * 0.29), Color("#53654c"))
  draw_circle(Vector2(w * 0.86, h * 0.23), 65, Color("#6f865f"))
  draw_circle(Vector2(w * 0.82, h * 0.20), 45, Color("#78966b"))
- draw_character(Vector2(w * 0.54, h * 0.56))
- draw_string(ThemeDB.fallback_font, Vector2(w * 0.48, h * 0.77), "Наташа", HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color("#3c2a25"))
+ draw_character(Vector2(w * 0.54, h * 0.60))
+ draw_string(ThemeDB.fallback_font, Vector2(w * 0.50, h * 0.78), "Наташа", HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color("#3c2a25"))
 
 func draw_kitchen(w: float, h: float) -> void:
  draw_rect(Rect2(0,0,w,h), Color("#d8d0c5"))
@@ -109,24 +109,24 @@ func build_ui() -> void:
  add_child(ui)
 
  var top := PanelContainer.new()
- top.position = Vector2(24,18)
- top.size = Vector2(1232,64)
+ top.position = Vector2(24,16)
+ top.size = Vector2(1232,52)
  ui.add_child(top)
  var row := HBoxContainer.new()
  row.add_theme_constant_override("separation", 18)
  top.add_child(row)
 
  room_name = Label.new()
- room_name.add_theme_font_size_override("font_size",26)
+ room_name.add_theme_font_size_override("font_size",22)
  room_name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
  row.add_child(room_name)
  clock_label = Label.new()
- clock_label.add_theme_font_size_override("font_size",20)
+ clock_label.add_theme_font_size_override("font_size",18)
  row.add_child(clock_label)
 
  room_buttons = HBoxContainer.new()
- room_buttons.position = Vector2(24,610)
- room_buttons.size = Vector2(1232,54)
+ room_buttons.position = Vector2(24,650)
+ room_buttons.size = Vector2(1232,50)
  room_buttons.add_theme_constant_override("separation",8)
  ui.add_child(room_buttons)
 
@@ -139,8 +139,8 @@ func build_ui() -> void:
 
  var talk := Button.new()
  talk.text = "💬 Поговорить с Наташей"
- talk.position = Vector2(930,500)
- talk.size = Vector2(300,48)
+ talk.position = Vector2(860,570)
+ talk.size = Vector2(340,48)
  talk.pressed.connect(func(): start_dialogue("living_room_natasha"))
  ui.add_child(talk)
 
@@ -163,8 +163,8 @@ func build_ui() -> void:
  var save := Button.new()
  save.text = "💾"
  save.tooltip_text = "Сохранить"
- save.position = Vector2(1115,20)
- save.size = Vector2(55,55)
+ save.position = Vector2(1120,20)
+ save.size = Vector2(50,45)
  save.pressed.connect(save_game)
  ui.add_child(save)
 
@@ -172,13 +172,13 @@ func build_ui() -> void:
  load.text = "↻"
  load.tooltip_text = "Загрузить"
  load.position = Vector2(1175,20)
- load.size = Vector2(55,55)
+ load.size = Vector2(50,45)
  load.pressed.connect(load_game)
  ui.add_child(load)
 
  message_label = Label.new()
- message_label.position = Vector2(40,555)
- message_label.size = Vector2(800,45)
+ message_label.position = Vector2(40,595)
+ message_label.size = Vector2(780,42)
  message_label.add_theme_font_size_override("font_size",18)
  ui.add_child(message_label)
 
@@ -186,8 +186,8 @@ func build_ui() -> void:
 
 func build_dialogue() -> void:
  dialogue_panel = PanelContainer.new()
- dialogue_panel.position = Vector2(60,390)
- dialogue_panel.size = Vector2(1160,190)
+ dialogue_panel.position = Vector2(60,455)
+ dialogue_panel.size = Vector2(1160,175)
  dialogue_panel.visible = false
  ui.add_child(dialogue_panel)
  var box := VBoxContainer.new()
