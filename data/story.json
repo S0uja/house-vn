@@ -4,7 +4,7 @@
  ],
  "living_room_natasha":[
   {"speaker":"Наташа","text":"Доброе утро. Наконец-то проснулся.","choices":[
-   {"text":"Доброе утро","relationship":{"Anna":1},"next":"friendly"},
+   {"text":"Доброе утро","relationship":{"Natasha":1},"next":"friendly"},
    {"text":"Что делаешь?","next":"what"}
   ]},
   {"id":"friendly","speaker":"Наташа","text":"Пока отдыхаю. Потом пойду на кухню.","advance":2},
