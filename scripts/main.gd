@@ -13,7 +13,16 @@ var dialogue_text: Label
 var choices_box: VBoxContainer
 var room_buttons: HBoxContainer
 var scene_texture: Texture2D
-var rooms_atlas: Texture2D
+var room_scene_paths := {
+ "Kirill Room": "res://assets/scenes/kirill_room_scene.png",
+ "Anna Room": "res://assets/scenes/anna_room_scene.png",
+ "Parents Room": "res://assets/scenes/parents_room_scene.png",
+ "Second Floor Hallway": "res://assets/scenes/second_floor_hallway_scene.png",
+ "Entrance Hall": "res://assets/scenes/entrance_hall_scene.png",
+ "Kitchen": "res://assets/scenes/kitchen_scene.png",
+ "Bathroom": "res://assets/scenes/bathroom_scene.png",
+ "Grandparents Room": "res://assets/scenes/grandparents_room_scene.png"
+}
 
 var current_room := "Kirill Room"
 var rooms := ["Kirill Room", "Anna Room", "Parents Room", "Second Floor Hallway", "Entrance Hall", "Kitchen", "Bathroom", "Grandparents Room"]
@@ -30,29 +39,29 @@ var room_names := {
 
 func _ready() -> void:
  state.current_room = current_room
- if ResourceLoader.exists("res://assets/scenes/rooms_atlas.jpg"):
-  rooms_atlas = load("res://assets/scenes/rooms_atlas.jpg")
- elif ResourceLoader.exists("res://assets/scenes/living_room_scene.jpg"):
-  scene_texture = load("res://assets/scenes/living_room_scene.jpg")
+ load_room_texture(current_room)
  build_ui()
+ load_room_texture(current_room)
  show_room(current_room)
  queue_redraw()
 
+func load_room_texture(id: String) -> void:
+ scene_texture = null
+ var path := str(room_scene_paths.get(id, ""))
+ if path != "" and ResourceLoader.exists(path):
+  scene_texture = load(path)
+
 func _draw() -> void:
- var size := get_viewport_rect().size
- if rooms_atlas:
-  var room_index := rooms.find(current_room)
-  if room_index >= 0:
-   var col := room_index % 3
-   var row := int(room_index / 3)
-   var source_rect := Rect2(col * 256, row * 144, 256, 144)
-   draw_texture_rect_region(rooms_atlas, Rect2(0, 0, size.x, size.y), source_rect)
-   return
+ var viewport_size := get_viewport_rect().size
  if scene_texture:
-  draw_texture_rect(scene_texture, Rect2(0, 0, size.x, size.y), false)
+  var texture_size := scene_texture.get_size()
+  var scale_factor := max(viewport_size.x / texture_size.x, viewport_size.y / texture_size.y)
+  var draw_size := texture_size * scale_factor
+  var draw_position := (viewport_size - draw_size) * 0.5
+  draw_texture_rect(scene_texture, Rect2(draw_position, draw_size), false)
   return
- draw_rect(Rect2(0, 0, size.x, size.y), Color("#11141b"))
- draw_living_room(size.x, size.y)
+ draw_rect(Rect2(Vector2.ZERO, viewport_size), Color("#11141b"))
+ draw_string(ThemeDB.fallback_font, Vector2(40, 80), "Фон комнаты не найден", HORIZONTAL_ALIGNMENT_LEFT, -1, 24, Color.WHITE)
 
 func draw_living_room(w: float, h: float) -> void:
  draw_rect(Rect2(0, 0, w, h), Color("#c8b49b"))
@@ -209,6 +218,7 @@ func go_to_room(id: String) -> void:
  current_room = id
  state.current_room = id
  state.advance_time(5)
+ load_room_texture(id)
  show_room(id)
  dialogue_panel.visible = false
  message_label.text = "Вы вошли в: " + room_names[id]
