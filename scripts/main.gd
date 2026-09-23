@@ -158,7 +158,7 @@ func build_ui() -> void:
  load_button.text = "↻"
  load_button.tooltip_text = "Загрузить"
  load_button.position = Vector2(1175,20)
- load.size = Vector2(50,45)
+ load_button.size = Vector2(50,45)
  load_button.pressed.connect(load_game)
  ui.add_child(load_button)
 
