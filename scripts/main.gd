@@ -55,9 +55,9 @@ func _draw() -> void:
  var viewport_size := get_viewport_rect().size
  if scene_texture:
   var texture_size := scene_texture.get_size()
-  var scale_factor := max(viewport_size.x / texture_size.x, viewport_size.y / texture_size.y)
-  var draw_size := texture_size * scale_factor
-  var draw_position := (viewport_size - draw_size) * 0.5
+  var scale_factor: float = maxf(viewport_size.x / texture_size.x, viewport_size.y / texture_size.y)
+  var draw_size: Vector2 = texture_size * scale_factor
+  var draw_position: Vector2 = (viewport_size - draw_size) * 0.5
   draw_texture_rect(scene_texture, Rect2(draw_position, draw_size), false)
   return
  draw_rect(Rect2(Vector2.ZERO, viewport_size), Color("#11141b"))
