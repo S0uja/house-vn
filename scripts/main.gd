@@ -12,8 +12,7 @@ var speaker_label: Label
 var dialogue_text: Label
 var choices_box: VBoxContainer
 var room_buttons: HBoxContainer
-var natasha_texture: Texture2D
-var room_texture: Texture2D
+var scene_texture: Texture2D
 
 var current_room := "Living Room"
 var rooms := ["Bedroom", "Living Room", "Kitchen", "Bathroom", "Hallway", "Yard"]
@@ -28,32 +27,19 @@ var room_names := {
 
 func _ready() -> void:
  state.current_room = current_room
- natasha_texture = load("res://assets/characters/natasha.png")
- room_texture = load("res://assets/backgrounds/living_room.jpg")
+ if ResourceLoader.exists("res://assets/scenes/living_room_scene.jpg"):
+  scene_texture = load("res://assets/scenes/living_room_scene.jpg")
  build_ui()
  show_room(current_room)
  queue_redraw()
 
 func _draw() -> void:
  var size := get_viewport_rect().size
- if current_room == "Living Room" and room_texture:
-  draw_texture_rect(room_texture, Rect2(0,0,size.x,size.y), false)
-  if natasha_texture:
-   var target := Rect2(size.x * 0.52, size.y * 0.05, size.x * 0.34, size.y * 0.88)
-   draw_texture_rect(natasha_texture, target, false)
+ if scene_texture:
+  draw_texture_rect(scene_texture, Rect2(0, 0, size.x, size.y), false)
   return
- var w := size.x
- var h := size.y
- draw_rect(Rect2(0, 0, w, h), Color("#11141b"))
-
- if current_room == "Living Room":
-  draw_living_room(w, h)
- elif current_room == "Kitchen":
-  draw_kitchen(w, h)
- elif current_room == "Bedroom":
-  draw_bedroom(w, h)
- else:
-  draw_generic_room(w, h)
+ draw_rect(Rect2(0, 0, size.x, size.y), Color("#11141b"))
+ draw_living_room(size.x, size.y)
 
 func draw_living_room(w: float, h: float) -> void:
  draw_rect(Rect2(0, 0, w, h), Color("#c8b49b"))
@@ -168,13 +154,13 @@ func build_ui() -> void:
  save.pressed.connect(save_game)
  ui.add_child(save)
 
- var load := Button.new()
- load.text = "↻"
- load.tooltip_text = "Загрузить"
- load.position = Vector2(1175,20)
+ var load_button := Button.new()
+ load_button.text = "↻"
+ load_button.tooltip_text = "Загрузить"
+ load_button.position = Vector2(1175,20)
  load.size = Vector2(50,45)
- load.pressed.connect(load_game)
- ui.add_child(load)
+ load_button.pressed.connect(load_game)
+ ui.add_child(load_button)
 
  message_label = Label.new()
  message_label.position = Vector2(40,595)
