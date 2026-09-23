@@ -4,7 +4,7 @@ extends RefCounted
 var day := 1
 var hour := 8
 var minute := 0
-var current_room := "Bedroom"
+var current_room := "Kirill Room"
 var relationships := {"Anna":0,"Mia":0,"Kate":0}
 var inventory: Array[String] = []
 var quests := {}
