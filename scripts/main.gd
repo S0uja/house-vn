@@ -15,15 +15,17 @@ var room_buttons: HBoxContainer
 var scene_texture: Texture2D
 var rooms_atlas: Texture2D
 
-var current_room := "Living Room"
-var rooms := ["Bedroom", "Living Room", "Kitchen", "Bathroom", "Hallway", "Yard"]
+var current_room := "Kirill Room"
+var rooms := ["Kirill Room", "Anna Room", "Parents Room", "Second Floor Hallway", "Entrance Hall", "Kitchen", "Bathroom", "Grandparents Room"]
 var room_names := {
- "Bedroom":"Спальня",
- "Living Room":"Гостиная",
+ "Kirill Room":"Комната Кирилла",
+ "Anna Room":"Комната Ани",
+ "Parents Room":"Комната родителей",
+ "Second Floor Hallway":"Коридор 2 этаж",
+ "Entrance Hall":"Прихожая 1 этаж",
  "Kitchen":"Кухня",
- "Bathroom":"Ванная",
- "Hallway":"Коридор",
- "Yard":"Двор"
+ "Bathroom":"Туалет с душевой",
+ "Grandparents Room":"Комната дедушки и бабушки"
 }
 
 func _ready() -> void:
@@ -123,14 +125,16 @@ func build_ui() -> void:
 
  room_buttons = HBoxContainer.new()
  room_buttons.position = Vector2(24,650)
- room_buttons.size = Vector2(1232,50)
- room_buttons.add_theme_constant_override("separation",8)
+ room_buttons.size = Vector2(1232,100)
+ room_buttons.add_theme_constant_override("separation",6)
+ room_buttons.add_theme_constant_override("line_spacing",6)
+ room_buttons.add_theme_constant_override("v_separation",6)
  ui.add_child(room_buttons)
 
  for id in rooms:
   var b := Button.new()
   b.text = room_names[id]
-  b.custom_minimum_size = Vector2(125,48)
+  b.custom_minimum_size = Vector2(150,48)
   b.pressed.connect(func(): go_to_room(id))
   room_buttons.add_child(b)
 
