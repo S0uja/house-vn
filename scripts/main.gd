@@ -13,6 +13,7 @@ var dialogue_text: Label
 var choices_box: VBoxContainer
 var room_buttons: HBoxContainer
 var scene_texture: Texture2D
+var rooms_atlas: Texture2D
 
 var current_room := "Living Room"
 var rooms := ["Bedroom", "Living Room", "Kitchen", "Bathroom", "Hallway", "Yard"]
@@ -27,7 +28,9 @@ var room_names := {
 
 func _ready() -> void:
  state.current_room = current_room
- if ResourceLoader.exists("res://assets/scenes/living_room_scene.jpg"):
+ if ResourceLoader.exists("res://assets/scenes/rooms_atlas.jpg"):
+  rooms_atlas = load("res://assets/scenes/rooms_atlas.jpg")
+ elif ResourceLoader.exists("res://assets/scenes/living_room_scene.jpg"):
   scene_texture = load("res://assets/scenes/living_room_scene.jpg")
  build_ui()
  show_room(current_room)
@@ -35,6 +38,14 @@ func _ready() -> void:
 
 func _draw() -> void:
  var size := get_viewport_rect().size
+ if rooms_atlas:
+  var room_index := rooms.find(current_room)
+  if room_index >= 0:
+   var col := room_index % 3
+   var row := int(room_index / 3)
+   var source_rect := Rect2(col * 256, row * 144, 256, 144)
+   draw_texture_rect_region(Rect2(0, 0, size.x, size.y), rooms_atlas, source_rect)
+   return
  if scene_texture:
   draw_texture_rect(scene_texture, Rect2(0, 0, size.x, size.y), false)
   return
