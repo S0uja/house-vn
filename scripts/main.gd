@@ -44,7 +44,7 @@ func _draw() -> void:
    var col := room_index % 3
    var row := int(room_index / 3)
    var source_rect := Rect2(col * 256, row * 144, 256, 144)
-   draw_texture_rect_region(Rect2(0, 0, size.x, size.y), rooms_atlas, source_rect)
+   draw_texture_rect_region(rooms_atlas, Rect2(0, 0, size.x, size.y), source_rect)
    return
  if scene_texture:
   draw_texture_rect(scene_texture, Rect2(0, 0, size.x, size.y), false)
