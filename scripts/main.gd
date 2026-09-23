@@ -270,16 +270,16 @@ func _unhandled_input(event: InputEvent) -> void:
    advance_dialogue()
 
 func choose(choice: Dictionary) -> void:
- for name in choice.get("relationship",{}):
-  state.relationships[name] = int(state.relationships.get(name,0)) + int(choice["relationship"][name])
- var next_id := str(choice.get("next",""))
- if next_id != "":
-  for i in range(dialogue.lines.size()):
-   if str(dialogue.lines[i].get("id","")) == next_id:
-    dialogue.index = i
-    render_dialogue()
-    return
- advance_dialogue()
+    for name in choice.get("relationship", {}):
+        state.relationships[name] = int(state.relationships.get(name, 0)) + int(choice["relationship"][name])
+    var next_id: String = str(choice.get("next", ""))
+    if next_id != "":
+        for i in range(dialogue.lines.size()):
+            if str(dialogue.lines[i].get("id", "")) == next_id:
+                dialogue.index = i
+                render_dialogue()
+                return
+    advance_dialogue()
 
 func save_game() -> void:
  message_label.text = "Сохранение: " + ("готово" if SaveManager.save_game(state) else "ошибка")
